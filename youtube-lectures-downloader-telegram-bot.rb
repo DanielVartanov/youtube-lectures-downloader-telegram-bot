@@ -2,6 +2,7 @@ require 'sinatra'
 require 'pathname'
 require 'digest/md5'
 
+MY_DOMAIN = 'lectures-downldr.mountainprogramming.com'
 VIDEOS_DIRECTORY = Pathname.new '/tmp/video_files/'
 
 get '/' do
@@ -11,6 +12,7 @@ end
 post '/download' do
   body = request.body.read
   json = JSON.parse body
+  chat_id = json['message']['chat']['id']
   video_url = json['message']['text']
 
   video_url_hash = Digest::MD5.hexdigest video_url
@@ -22,6 +24,13 @@ post '/download' do
     youtube-dl #{video_url} --format bestaudio --extract-audio --audio-format mp3 --audio-quality 0
 CMD
 
-  resulting_audio_file = unique_video_subdirectory.glob('*.mp3').first
-  send_file resulting_audio_file
+  download_downloaded_url = "http://#{MY_DOMAIN}/download_downloaded/#{video_url_hash}"
+  { chat_id: chat_id, text: download_downloaded_url }.to_json
+end
+
+get '/download_downloaded/:video_url_hash' do
+  unique_video_subdirectory = VIDEOS_DIRECTORY + params[:video_url_hash]
+  audio_file_path = unique_video_subdirectory.glob('*.mp3').first
+
+  send_file audio_file_path
 end
