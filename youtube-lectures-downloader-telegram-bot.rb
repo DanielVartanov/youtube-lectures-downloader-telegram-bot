@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'pathname'
 require 'digest/md5'
+require 'json'
 
 MY_DOMAIN = 'lectures-downldr.mountainprogramming.com'
 VIDEOS_DIRECTORY = Pathname.new '/tmp/video_files/'
@@ -25,6 +26,8 @@ post '/download' do
 CMD
 
   download_downloaded_url = "http://#{MY_DOMAIN}/download_downloaded/#{video_url_hash}"
+
+  content_type :json
   { method: 'sendMessage', chat_id: chat_id, text: download_downloaded_url }.to_json
 end
 
