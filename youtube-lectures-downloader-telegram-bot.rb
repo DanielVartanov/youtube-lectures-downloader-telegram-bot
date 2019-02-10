@@ -11,7 +11,7 @@ end
 post '/download' do
   body = request.body.read
   json = JSON.parse body
-  video_url = json['message']
+  video_url = json['message']['text']
 
   video_url_hash = Digest::MD5.hexdigest video_url
   unique_video_subdirectory = VIDEOS_DIRECTORY + video_url_hash
