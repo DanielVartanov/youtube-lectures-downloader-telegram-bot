@@ -25,7 +25,7 @@ post '/download' do
 CMD
 
   download_downloaded_url = "http://#{MY_DOMAIN}/download_downloaded/#{video_url_hash}"
-  { chat_id: chat_id, text: download_downloaded_url }.to_json
+  { method: 'sendMessage', chat_id: chat_id, text: download_downloaded_url }.to_json
 end
 
 get '/download_downloaded/:video_url_hash' do
