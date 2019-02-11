@@ -35,5 +35,5 @@ get '/download_downloaded/:video_url_hash' do
   unique_video_subdirectory = VIDEOS_DIRECTORY + params[:video_url_hash]
   audio_file_path = unique_video_subdirectory.glob('*.mp3').first
 
-  send_file audio_file_path
+  attachment audio_file_path
 end
